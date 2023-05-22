@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ADD USER</title>
+	<style type="text/css">
+		
+		form {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-top: 50px;
+		}
+
+		input[type="text"] {
+			width: 300px;
+			height: 30px;
+			margin-bottom: 20px;
+		}
+
+		input[type="submit"] {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 15px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		input[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+
+		ul {
+			list-style-type: none;
+			padding: 0;
+			margin-top: 50px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+
+		li {
+			background-color: #f2f2f2;
+			padding: 10px;
+			margin: 10px;
+			border-radius: 5px;
+			box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+			font-size: 18px;
+			font-weight: bold;
+			text-align: center;
+			width: 200px;
+			height: 100px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		li.green {
+			background-color: green;
+			color: white;
+		}
+
+		li.yellow {
+			background-color: yellow;
+			color: black;
+		}
+	</style>
+</head>
+<body>
+
+	<form id = "my_form">
+		<h2>ADD USER</h2>
+		<label>Name</label>
+		<input type="text" id="name">
+		<label>Email</label>
+		<input type="text" id="email">
+		<input type="submit" value="Submit">
+	</form>
+
+	<script>
+
+		function myfunction(e){
+			e.preventDefault();
+		
+		var name1 = document.getElementById('name').value;
+		var email1 = document.getElementById('email').value;
+
+		localStorage.setItem('NAME', name1);
+		localStorage.setItem('EMAIL', email1);
+	}
+	document.getElementById('my_form').addEventListener('submit', myfunction);
+	</script>
+
+</body>
+</html>
