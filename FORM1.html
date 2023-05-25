@@ -83,8 +83,12 @@
 		var name1 = document.getElementById('name').value;
 		var email1 = document.getElementById('email').value;
 
-		localStorage.setItem('NAME', name1);
-		localStorage.setItem('EMAIL', email1);
+		var user = {
+				name: name1,
+				email: email1
+		};
+
+		localStorage.setItem('userDetails', JSON.stringify(user));
 	}
 	document.getElementById('my_form').addEventListener('submit', myfunction);
 	</script>
