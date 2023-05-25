@@ -70,11 +70,14 @@
 		<h2>ADD USER</h2>
 		<label>Name</label>
 		<input type="text" id="name">
+		<input type="hidden" id="userid">
 		<label>Email</label>
 		<input type="text" id="email">
 		<input type="submit" value="Submit">
 	</form>
+<div id="output">
 
+</div>
 	<script>
 
 		function myfunction(e){
@@ -87,8 +90,9 @@
 				name: name1,
 				email: email1
 		};
-
-		localStorage.setItem('userDetails', JSON.stringify(user));
+		localStorage.setItem('userDetails'+name1, JSON.stringify(user));	
+		document.getElementById('output').innerText=JSON.stringify(user);
+		
 	}
 	document.getElementById('my_form').addEventListener('submit', myfunction);
 	</script>
