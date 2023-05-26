@@ -11,8 +11,6 @@
 			margin-top: 50px;
 		}
 
-		
-
 		input[type="submit"] {
 			background-color: #4CAF50;
 			color: white;
@@ -65,37 +63,55 @@
 	</style>
 </head>
 <body>
-
-	<form id = "my_form">
+	<form id="my_form">
 		<h2>ADD USER</h2>
 		<label>Name</label>
 		<input type="text" id="name">
-		<input type="hidden" id="userid">
 		<label>Email</label>
 		<input type="text" id="email">
 		<input type="submit" value="Submit">
+		<div>
+			<span id="output"></span>
+		</div>
 	</form>
-<div id="output">
-
-</div>
 	<script>
-
-		function myfunction(e){
+		function myfunction(e) {
 			e.preventDefault();
-		
-		var name1 = document.getElementById('name').value;
-		var email1 = document.getElementById('email').value;
+			var user_details = {
+				name1: document.getElementById('name').value,
+				email1: document.getElementById('email').value
+			};
+			var storedUserDetails = localStorage.getItem('userDetails');
+			var userDetailsArray = storedUserDetails ? JSON.parse(storedUserDetails) : [];
+			userDetailsArray.push(user_details);
+			localStorage.setItem('userDetails', JSON.stringify(userDetailsArray));
+			displayUserDetails(userDetailsArray);
+		}
 
-		var user = {
-				name: name1,
-				email: email1
-		};
-		localStorage.setItem('userDetails'+name1, JSON.stringify(user));	
-		document.getElementById('output').innerText=JSON.stringify(user);
-		
-	}
-	document.getElementById('my_form').addEventListener('submit', myfunction);
+		function displayUserDetails(userDetailsArray) {
+			var outputElement = document.getElementById('output');
+			outputElement.innerHTML = '';
+			userDetailsArray.forEach(function(userDetails, index) {
+				var listItem = document.createElement('li');
+				listItem.textContent = JSON.stringify(userDetails);
+				var deleteButton = document.createElement('button');
+				deleteButton.textContent = 'Delete';
+				deleteButton.addEventListener('click', function() {
+					userDetailsArray.splice(index, 1);
+					localStorage.setItem('userDetails', JSON.stringify(userDetailsArray));
+					displayUserDetails(userDetailsArray);
+				});
+				listItem.appendChild(deleteButton);
+				outputElement.appendChild(listItem);
+			});
+		}
+
+		document.getElementById('my_form').addEventListener('submit', myfunction);
+		var storedUserDetails = localStorage.getItem('userDetails');
+		if (storedUserDetails) {
+			var userDetailsArray = JSON.parse(storedUserDetails);
+			displayUserDetails(userDetailsArray);
+		}
 	</script>
-
 </body>
 </html>
