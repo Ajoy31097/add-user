@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>ADD USER</title>
 	<style type="text/css">
-		
 		form {
 			display: flex;
 			flex-direction: column;
@@ -39,7 +39,7 @@
 			padding: 10px;
 			margin: 10px;
 			border-radius: 5px;
-			box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 			font-size: 18px;
 			font-weight: bold;
 			text-align: center;
@@ -101,9 +101,27 @@
 					localStorage.setItem('userDetails', JSON.stringify(userDetailsArray));
 					displayUserDetails(userDetailsArray);
 				});
+
+				var editButton = document.createElement('button');
+				editButton.textContent = 'Edit';
+				editButton.addEventListener('click', function () {
+					editUserDetails(userDetailsArray, index);
+				});
+				listItem.appendChild(editButton);
 				listItem.appendChild(deleteButton);
 				outputElement.appendChild(listItem);
 			});
+		}
+		function editUserDetails(userDetailsArray, index) {
+			var newName = prompt('Enter the new name:');
+			var newEmail = prompt('Enter the new email:');
+
+			if (newName && newEmail) {
+				userDetailsArray[index].name1 = newName;
+				userDetailsArray[index].email1 = newEmail;
+				localStorage.setItem('userDetails', JSON.stringify(userDetailsArray));
+				displayUserDetails(userDetailsArray);
+			}
 		}
 
 		document.getElementById('my_form').addEventListener('submit', myfunction);
