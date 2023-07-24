@@ -1,27 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>ADD USER</title>
-	<link rel="stylesheet" href="Style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADD USER</title>
+  <link rel="stylesheet" href="Style.css">
 </head>
 <body>
-	<form id="my_form" onsubmit="myfunction(event)">
-		<h2>ADD USER</h2>
-		<label>Name</label>
-		<input type="text" id="name" name="name">
-		<label>Email</label>
-		<input type="text" id="email" name="email">
-		<label>Phone Number</label>
-		<input type="number" id="phone" name="phone">
-		<input type="submit" value="Submit">
-		<div>
-			<span id="output"></span>
-		</div>
-	</form>
-	<script src="Script.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
-	
+  <form id="my_form">
+  <label for="name">Name:</label>
+    <input type="text" id="name" required><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" required><br>
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" required><br>
+    <input type="submit" value="Submit">
+    <div>
+      <div id="output"></div>
+    </div>
+  </form>
+  <script src="Script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+
+  <script>
+
+document.getElementById('my_form').addEventListener('submit', function(event){
+  event.preventDefault();
+  
+  
+  var user_details = {
+    Name: document.getElementById('name').value,
+    Email: document.getElementById('email').value,
+    Phone_No: document.getElementById('phone').value
+};
+
+axios.post('https://crudcrud.com/api/92524ce99e0347098b3b9701bc6a1e86/user_details', user_details)
+    .then(function(response) {
+      console.log(response.data);
+
+      window.location.reload();
+      
+      
+    })
+    .catch(function(error) {
+      console.error(error);
+    });
+});
+
+  window.onload = function(){
+    axios.get('https://crudcrud.com/api/92524ce99e0347098b3b9701bc6a1e86/user_details')
+
+        .then(function(response){
+         console.log(response);
+
+         for (var i=0; i<response.data.length; i++){
+         showOnScreen(response.data[i]);
+    }
+  })
+  .catch(function(error){
+    console.error(error);
+  });
+  }
+
+ function showOnScreen(user_details){
+  
+  
+  var userDiv = document.createElement('div');
+  userDiv.setAttribute('id', 'userDiv_' + user_details._id);
+  
+    var nameParagraph = document.createElement('p');
+    nameParagraph.textContent = 'Name: ' + user_details.Name;
+    
+    var emailParagraph = document.createElement('p');
+    emailParagraph.textContent = 'Email: ' + user_details.Email;
+    
+    var phoneParagraph = document.createElement('p');
+    phoneParagraph.textContent = 'Phone Number: ' + user_details.Phone_No; 
+
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.style.backgroundColor = 'Red';
+    deleteButton.style.color = 'white';
+
+    var editBotton = document.createElement('button');
+    editBotton.textContent = 'Edit';
+    editBotton.style.backgroundColor = 'Green';
+    editBotton.style.color = 'white';
+
+    editBotton.addEventListener('click', function(event){
+      event.stopPropagation();
+      editUser(user_details._id);
+    })
+    
+    deleteButton.addEventListener('click', function(event){
+      event.stopPropagation();
+      deleteUser(user_details._id, userDiv);
+    })
+    
+
+    userDiv.appendChild(nameParagraph);
+    userDiv.appendChild(emailParagraph);
+    userDiv.appendChild(phoneParagraph);
+    userDiv.appendChild(deleteButton);
+    userDiv.appendChild(editBotton);
+
+    var display = document.getElementById('output');
+    display.appendChild(userDiv);
+ }
+  
+  function deleteUser(userId, userDiv){
+    axios.delete(`https://crudcrud.com/api/92524ce99e0347098b3b9701bc6a1e86/user_details/${userId}`)
+    .then(function(response){
+      console.log(response.data);
+      if (response.status === 200) {
+        userDiv.remove();
+      }
+    })
+    .catch(function(error){
+      console.error(error);
+    });
+  };
+  
+  function editUser(userId) {
+    axios.get(`https://crudcrud.com/api/92524ce99e0347098b3b9701bc6a1e86/user_details/${userId}`)
+      .then(function (response) {
+        var user_details = response.data;
+
+        document.getElementById('name').value = user_details.Name;
+        document.getElementById('email').value = user_details.Email;
+        document.getElementById('phone').value = user_details.Phone_No;
+
+        var updateButton = document.createElement('button');
+        updateButton.textContent = 'Update'; // Changed button text to 'Update'
+        updateButton.style.backgroundColor = 'Blue';
+        updateButton.style.color = 'white';
+
+        updateButton.addEventListener('click', function (event) {
+          event.preventDefault();
+
+          var updatedForm = {
+            Name: document.getElementById('name').value,
+            Email: document.getElementById('email').value,
+            Phone_No: document.getElementById('phone').value
+          };
+
+          axios.put(`https://crudcrud.com/api/92524ce99e0347098b3b9701bc6a1e86/user_details/${userId}`, updatedForm)
+            .then(function (response) {
+              console.log(response.data);
+              window.location.reload();
+            })
+            .catch(function (error) {
+              console.error(error);
+            });
+        });
+
+        // Replace the existing 'editButton' with 'updateButton'
+        var userDiv = document.getElementById('userDiv_' + userId);
+        var editButton = userDiv.querySelector('button');
+        userDiv.replaceChild(updateButton, editButton);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
+
+  </script>
+
 </body>
 </html>
